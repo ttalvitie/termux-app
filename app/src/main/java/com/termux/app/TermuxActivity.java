@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.termux.R;
+import com.termux.app.activities.ScreenActivity;
 import com.termux.app.terminal.TermuxActivityRootView;
 import com.termux.shared.packages.PermissionUtils;
 import com.termux.shared.termux.TermuxConstants;
@@ -226,6 +227,8 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
         setNewSessionButtonView();
 
         setToggleKeyboardView();
+
+        setOpenScreenView();
 
         registerForContextMenu(mTerminalView);
 
@@ -535,7 +538,12 @@ public final class TermuxActivity extends Activity implements ServiceConnection 
         });
     }
 
-
+    private void setOpenScreenView() {
+        findViewById(R.id.open_screen_button).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ScreenActivity.class);
+            startActivity(intent);
+        });
+    }
 
 
 
