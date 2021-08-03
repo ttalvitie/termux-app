@@ -6,5 +6,5 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libtermux-screen
 LOCAL_SRC_FILES := screen.c
-LOCAL_LDLIBS := -llog
+LOCAL_LDLIBS := -landroid -llog
 include $(BUILD_SHARED_LIBRARY)

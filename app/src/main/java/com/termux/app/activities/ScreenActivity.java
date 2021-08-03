@@ -20,11 +20,12 @@ class ScreenBackend {
 
     public static native int getWidth(long backend);
     public static native int getHeight(long backend);
+
+    public static native void startRender(long backend, Surface surface);
+    public static native void stopRender(long backend);
 }
 
 class ScreenView extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String LOG_TAG = "ScreenView";
-
     private long backend;
     private int width;
     private int height;
@@ -51,14 +52,9 @@ class ScreenView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        Log.d(LOG_TAG, "surfaceCreated " + backend);
-        Surface surface = surfaceHolder.getSurface();
-        Canvas canvas = surface.lockCanvas(null);
-        Log.d(LOG_TAG, "canvas " + canvas.getWidth() + " " + canvas.getHeight());
-        Paint paint = new Paint();
-        paint.setColor(0xFFFFFFFF);
-        canvas.drawRect(500.0f, 500.0f, 1000.0f, 1000.0f, paint);
-        surface.unlockCanvasAndPost(canvas);
+        if(backend != 0) {
+            ScreenBackend.startRender(backend, surfaceHolder.getSurface());
+        }
     }
 
     @Override
@@ -66,7 +62,9 @@ class ScreenView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        Log.d(LOG_TAG, "surfaceDestroyed " + backend);
+        if(backend != 0) {
+            ScreenBackend.stopRender(backend);
+        }
     }
 
     @Override
@@ -100,7 +98,6 @@ public class ScreenActivity extends Activity {
         }
 
         active = true;
-        Log.d(LOG_TAG, "activate");
 
         view = new ScreenView(this, backend);
         setContentView(view);
@@ -112,7 +109,6 @@ public class ScreenActivity extends Activity {
 
         if(active) {
             active = false;
-            Log.d(LOG_TAG, "deactivate");
             view.discardBackend();
             ScreenBackend.destroy(backend);
         }
