@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
@@ -43,7 +44,11 @@ class ScreenView extends SurfaceView implements SurfaceHolder.Callback {
         setPivotY(0.0f);
         setScaleX(1.0f);
         setScaleY(1.0f);
-        getHolder().addCallback(this);
+
+        SurfaceHolder holder = getHolder();
+        holder.setFormat(PixelFormat.RGBX_8888);
+        holder.setFixedSize(width, height);
+        holder.addCallback(this);
     }
 
     public void discardBackend() {
